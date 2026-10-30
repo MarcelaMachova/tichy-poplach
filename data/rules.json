@@ -1,0 +1,36 @@
+{
+  "_comment": "Prototype lists and timers for the Tichý poplach simulator. Real bank/number lists will be added before a pilot — see README.",
+
+  "timers": {
+    "normal": {
+      "bankAppForegroundThresholdSec": 600,
+      "bankSignalWindowSec": 7200,
+      "longCallThresholdSec": 3600,
+      "longCallSumThresholdSec": 2700,
+      "longCallSumWindowSec": 7200,
+      "consecutiveCallMinDurationSec": 600,
+      "consecutiveCallGapMaxSec": 900,
+      "postCallContextWindowSec": 14400,
+      "newContactThresholdSec": 86400,
+      "recordRetentionSec": 86400
+    },
+    "demo": {
+      "bankAppForegroundThresholdSec": 10,
+      "bankSignalWindowSec": 120,
+      "longCallThresholdSec": 60,
+      "longCallSumThresholdSec": 45,
+      "longCallSumWindowSec": 120,
+      "consecutiveCallMinDurationSec": 10,
+      "consecutiveCallGapMaxSec": 15,
+      "postCallContextWindowSec": 300,
+      "newContactThresholdSec": 86400,
+      "recordRetentionSec": 86400
+    }
+  },
+
+  "institutionNumbers": ["+420800100100", "158"],
+  "bankOfficialNumbers": ["+420800100100"],
+  "bankApps": ["testovaci-banka"],
+  "bankNotificationSenders": ["Mobilní banka"],
+  "bankSmsSenders": ["TestBanka"]
+}

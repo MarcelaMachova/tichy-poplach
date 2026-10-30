@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tichý poplach – webový simulátor</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="page-header">
+  <h1>Tichý poplach</h1>
+  <p class="subtitle">
+    Webový simulátor chování Android aplikace proti telefonním podvodům.
+  </p>
+</header>
+
+<div class="clock-bar">
+  <span class="clock-label">Simulovaný čas:</span>
+  <span id="sim-clock" class="clock-value">--:--:--</span>
+</div>
+
+<div class="simulator-layout">
+<main class="phones">
+
+  <section class="phone-wrapper" id="phone-a-wrapper">
+    <h2>Telefon A — uživatelka</h2>
+    <div class="phone" id="phone-a">
+      <div class="status-bar">
+        <span class="status-time" data-status-clock>--:--</span>
+        <span class="status-camera" aria-hidden="true"></span>
+        <span class="status-icons" aria-hidden="true">
+          <span class="status-signal"><span></span><span></span><span></span><span></span></span>
+          <span class="status-battery"><span class="status-battery-fill"></span></span>
+        </span>
+      </div>
+      <div class="notification-chip">🔔 Tichý poplach hlídá</div>
+      <div class="phone-screen" id="phone-a-screen">
+
+        <div class="screen active" data-screen="home">
+          <div class="home-screen">
+            <div class="app-icon" data-app="telefon">
+              <div class="icon-glyph">📞</div>
+              <div class="icon-label">Telefon</div>
+            </div>
+            <div class="app-icon" data-app="banka">
+              <div class="icon-glyph">🏦</div>
+              <div class="icon-label">Mobilní banka</div>
+            </div>
+            <div class="app-icon" data-app="zpravy">
+              <div class="icon-glyph">💬</div>
+              <div class="icon-label">Zprávy</div>
+            </div>
+            <div class="app-icon" data-app="tichy-poplach">
+              <div class="icon-glyph">🛡️</div>
+              <div class="icon-label">Tichý poplach</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="screen" data-screen="call">
+          <button type="button" class="back-button" data-back aria-label="Plocha">←</button>
+          <div class="call-view" id="phone-a-call-view">
+            <p class="call-status" id="phone-a-call-status">Žádný hovor</p>
+            <p class="call-peer" id="phone-a-call-peer"></p>
+            <p class="call-duration" id="phone-a-call-duration"></p>
+            <div class="call-actions" id="phone-a-call-actions"></div>
+          </div>
+        </div>
+
+        <div class="screen" data-screen="bank">
+          <button type="button" class="back-button" data-back aria-label="Plocha">←</button>
+          <div class="app-view">
+            <h3>Mobilní banka</h3>
+            <p class="app-disclaimer">Napodobenina bankovní aplikace pro simulátor, žádná skutečná banka.</p>
+            <div class="fake-account">
+              <p class="fake-account-label">Běžný účet</p>
+              <p class="fake-account-balance">24 318 Kč</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="screen" data-screen="zpravy">
+          <button type="button" class="back-button" data-back aria-label="Plocha">←</button>
+          <div class="app-view">
+            <h3>Zprávy</h3>
+            <ul class="message-list" id="phone-a-messages"></ul>
+          </div>
+        </div>
+
+        <div class="screen" data-screen="tichy-poplach">
+          <button type="button" class="back-button" data-back aria-label="Plocha">←</button>
+          <div class="app-view">
+            <div class="tabs">
+              <button type="button" class="tab-button active" data-tp-tab="nastaveni">Nastavení</button>
+              <button type="button" class="tab-button" data-tp-tab="zaznam">Záznam</button>
+            </div>
+
+            <div class="tab-panel active" data-tp-panel="nastaveni">
+              <label class="field">
+                Jméno uživatelky
+                <input type="text" id="setting-user-name" value="Jana">
+              </label>
+              <label class="field">
+                Číslo blízkého
+                <input type="text" id="setting-contact-number" value="+420777111222">
+              </label>
+              <div class="permission-list">
+                <p><strong>Stav hovoru</strong> — potřeba poznat, jestli právě telefonujete s neověřeným číslem.</p>
+                <p><strong>Čas poslední změny kontaktu</strong> — potřeba poznat čerstvě uložená čísla.</p>
+                <p><strong>Statistiky používání aplikací</strong> — potřeba poznat, že je v popředí bankovní aplikace.</p>
+                <p><strong>Naslouchání notifikacím</strong> (jen odesílatel) — potřeba poznat notifikaci od banky.</p>
+                <p><strong>Příjem SMS</strong> (jen odesílatel) — potřeba poznat SMS od banky.</p>
+                <p><strong>Instalace balíčků</strong> — potřeba poznat instalaci aplikace mimo Google Play.</p>
+              </div>
+              <p class="warning-card">
+                Podvodník vám může říct, že tahle aplikace je napadená nebo že ji máte vypnout.
+                To je znamení podvodu.
+              </p>
+            </div>
+
+            <div class="tab-panel" data-tp-panel="zaznam">
+              <p class="placeholder-note">Posledních 24 hodin. Po obnovení stránky se záznam vymaže.</p>
+              <ul class="record-list" id="record-list"></ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="warning-overlay" id="warning-overlay">
+          <div class="warning-body">
+            <p class="warning-state" id="warning-state"></p>
+            <p class="warning-lead" id="warning-lead"></p>
+            <ul class="warning-lines" id="warning-lines"></ul>
+            <p class="warning-final">Zavěste a zavolejte na oficiální číslo vaší banky nebo na linku 158.</p>
+          </div>
+          <div class="warning-actions">
+            <button type="button" id="warning-end-call">Ukončit hovor</button>
+            <button type="button" id="warning-call-relative">Zavolat blízkému</button>
+            <button type="button" id="warning-continue">Pokračovat</button>
+          </div>
+        </div>
+
+        <div class="fake-cursor" id="phone-a-cursor"></div>
+
+        <div class="gesture-bar" aria-hidden="true"></div>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="phone-wrapper" id="phone-b-wrapper">
+    <h2>Telefon B — blízký (např. „dcera“)</h2>
+    <div class="phone" id="phone-b">
+      <div class="status-bar">
+        <span class="status-time" data-status-clock>--:--</span>
+        <span class="status-camera" aria-hidden="true"></span>
+        <span class="status-icons" aria-hidden="true">
+          <span class="status-signal"><span></span><span></span><span></span><span></span></span>
+          <span class="status-battery"><span class="status-battery-fill"></span></span>
+        </span>
+      </div>
+      <div class="phone-screen" id="phone-b-screen">
+
+        <div class="screen active" data-screen="home">
+          <div class="home-screen">
+            <div class="app-icon" data-app="telefon">
+              <div class="icon-glyph">📞</div>
+              <div class="icon-label">Telefon</div>
+            </div>
+            <div class="app-icon" data-app="zpravy">
+              <div class="icon-glyph">💬</div>
+              <div class="icon-label">Zprávy</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="screen" data-screen="call">
+          <button type="button" class="back-button" data-back aria-label="Plocha">←</button>
+          <div class="call-view">
+            <p class="call-status" id="phone-b-call-status">Příchozí hovor</p>
+            <p class="call-peer" id="phone-b-call-peer"></p>
+            <div class="call-actions">
+              <button type="button" id="phone-b-call-dismiss">Zavěsit</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="screen" data-screen="zpravy">
+          <button type="button" class="back-button" data-back aria-label="Plocha">←</button>
+          <div class="app-view">
+            <h3>Zprávy</h3>
+            <ul class="message-list" id="phone-b-messages"></ul>
+          </div>
+        </div>
+
+        <div class="fake-cursor" id="phone-b-cursor"></div>
+
+        <div class="gesture-bar" aria-hidden="true"></div>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<aside class="control-panel">
+  <h2>Ovládací panel</h2>
+
+  <div class="control-group scenario-group">
+    <h3>Spustit scénář</h3>
+    <p class="placeholder-note">Vyberte scénář a nechte si ho automaticky přehrát.</p>
+    <p class="placeholder-note">Výběr níže je jen několik ukázkových podvodných scénářů. Kompletní seznam, viz repozitář.</p>
+    <label class="field">
+      Scénář
+      <select id="scenario-select"></select>
+    </label>
+    <div class="button-row">
+      <button type="button" id="scenario-start">Přehrát od začátku</button>
+      <button type="button" id="scenario-step">Další krok</button>
+      <button type="button" id="scenario-autoplay">Přehrát automaticky</button>
+      <button type="button" id="scenario-stop-autoplay">Zastavit přehrávání</button>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="demo-toggle">
+      <input type="checkbox" id="demo-mode-toggle" checked>
+      Demo režim (zkrácené lhůty)
+    </label>
+    <button type="button" id="reset-button">Reset simulace</button>
+  </div>
+
+  <details class="control-group advanced-controls">
+    <summary>Pokročilé ruční ovládání (pro testování, ne pro ukázku)</summary>
+
+    <div class="control-subgroup">
+      <h3>Hovor na telefon A</h3>
+      <label class="field">
+        Číslo volajícího / volaného
+        <select id="call-number-select">
+          <option value="unknown">Neznámé číslo</option>
+          <option value="mama">Kontakt „Máma“</option>
+          <option value="recent">Kontakt uložený před 1 h</option>
+          <option value="moje-banka">Kontakt „Moje banka“ (podvržené číslo)</option>
+          <option value="bank-official">Oficiální číslo banky</option>
+        </select>
+      </label>
+      <div class="button-row">
+        <button type="button" id="call-incoming-button">Příchozí hovor</button>
+        <button type="button" id="call-outgoing-button">Odchozí hovor</button>
+      </div>
+    </div>
+
+    <div class="control-subgroup">
+      <h3>Ostatní události</h3>
+      <div class="button-row">
+        <button type="button" id="event-bank-notification">Notifikace „Potvrďte přihlášení“</button>
+        <button type="button" id="event-bank-sms">SMS od banky</button>
+        <button type="button" id="event-sideload-install">Instalace aplikace mimo Google Play</button>
+      </div>
+    </div>
+  </details>
+</aside>
+
+<div class="scenario-caption-bar" id="scenario-caption-bar">
+  <span class="scenario-caption-icon" aria-hidden="true">🛡️</span>
+  <p class="scenario-caption-text" id="scenario-caption-text">Vyberte scénář v panelu a klikněte na „Přehrát od začátku“.</p>
+</div>
+</div>
+
+<footer class="page-footer">
+  <p>
+    Prototyp pro Český barometr obav z AI 2026. Toto je webový simulátor,
+    nejde o skutečnou Android aplikaci.
+  </p>
+</footer>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

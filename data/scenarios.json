@@ -1,0 +1,356 @@
+{
+  "_comment": "Scénáře pro laboratorní test (docs/vyhodnoceni.md) a přehrávač scénářů (5.9). Časy jsou v sekundách od začátku scénáře. Simulované, podle vzorců z data/legendy/zdroje.md - nejde o skutečná data obětí. Pole 'inPlayer': true určuje výběr zobrazený v živém Přehrávači scénářů (porota si nestihne projít všech 26+1) - na laboratorní test (scripts/evaluate-scenarios.js) a docs/vyhodnoceni.md nemá vliv, ten počítá se všemi scénáři podle 'category'. Pole 'label' u kroků typu 'call' se na displeji telefonu už nepoužívá (js/app.js, scenarioCallerLabel) - telefon vždy zobrazí jméno ze seznamu 'contacts', pokud číslo sedí, jinak skutečné číslo (realističtější než popisný text typu 'Neznámé číslo (kurýr)'); 'label' slouží jen jako čitelná poznámka pro čtení dat.",
+  "scenarios": [
+    {
+      "id": "fraud-01",
+      "title": "\"Bankéř\": napadený účet, kontrola v aplikaci",
+      "category": "fraud",
+      "inPlayer": true,
+      "source": "zdroje.md #1, #4",
+      "forceDemoMode": false,
+      "manualContinue": true,
+      "contacts": [],
+      "steps": [
+        { "time": 0, "type": "call", "direction": "incoming", "number": "+420733100001", "label": "Neznámé číslo", "caption": "Na telefonu A se objevuje příchozí hovor z neznámého čísla. Uživatelka hovor přijme a volající se jí představí jako bankéř - tvrdí, že má napadený účet." },
+        { "time": 660, "type": "open-app", "app": "testovaci-banka", "deferTrigger": true, "caption": "Po 11 minutách na lince přesvědčí Uživatelku, aby otevřela Mobilní banku, např. pro \"kontrolu\" zůstatku nebo sdělení citlivých údajů, které si jako bankéř vyžádá." },
+        { "time": 661, "type": "narrate", "focus": "a", "trigger": { "type": "open-app", "app": "testovaci-banka" }, "caption": "Tichý poplach identifikuje podezřelý signál (hovor z neznámého čísla trvající déle než 10 minut a otevřené mobilní bankovnictví) a zobrazí varování (1. stupeň ochrany)." },
+        { "time": 662, "type": "continue", "focus": "a", "caption": "Uživatelka bankéři i přes varování věří, stiskne tlačítko Pokračovat a pokračuje v hovoru." },
+        { "time": 780, "type": "bank-notification", "sender": "Mobilní banka", "deferTrigger": true, "caption": "O chvíli později přijde notifikace z Mobilní banky \"Potvrďte přihlášení\" - banka totiž zaznamenala pokus o přihlášení, který se zcizenými údaji mezitím dělá bankéř." },
+        { "time": 781, "type": "narrate", "focus": "a", "trigger": { "type": "bank-notification", "sender": "Mobilní banka" }, "caption": "Tichý poplach identifikuje další podezřelý signál (hovor z neznámého čísla, dříve otevřené mobilní bankovnictví a nyní notifikace od banky) a posílá upozornění blízké osobě (2. stupeň ochrany)." },
+        { "time": 782, "type": "continue", "focus": "a", "caption": "I kdyby uživatelka stále bankéři věřila, Tichý poplach už odeslal upozornění blízké osobě, která může zasáhnout." },
+        { "time": 800, "type": "show-message-b", "focus": "b", "caption": "Na telefon B (např. dcery) přijde zpráva z Tichého poplachu s informací, že blízká osoba pravděpodobně mluví s podvodníkem." },
+        { "time": 900, "type": "call-end", "caption": "Hovor končí." },
+        { "time": 960, "type": "show-record", "caption": "Na telefonu A je možné zobrazit Záznam z Tichého poplachu - co se stalo a proč." }
+      ]
+    },
+    {
+      "id": "fraud-02",
+      "title": "Instalace \"zabezpečovací\" aplikace hned na začátku",
+      "category": "fraud",
+      "inPlayer": true,
+      "source": "zdroje.md #4",
+      "forceDemoMode": false,
+      "manualContinue": true,
+      "contacts": [],
+      "steps": [
+        { "time": 0, "type": "call", "direction": "incoming", "number": "+420733100002", "label": "Neznámé číslo", "caption": "Na telefonu A se objevuje příchozí hovor z neznámého čísla. Uživatelka hovor přijme - volající ji hned žádá o okamžitou instalaci \"zabezpečovací\" aplikace." },
+        { "time": 60, "type": "bank-sms", "sender": "Neznámé číslo", "body": "Vaše bankovnictví je napadené. Stáhněte si zabezpečovací aplikaci: banka-zabezpeceni.cz/instalovat", "caption": "O chvíli později Uživatelce přijde SMS s odkazem na \"zabezpečovací\" aplikaci." },
+        { "time": 90, "type": "install", "deferTrigger": true, "caption": "Uživatelka otevře Zprávy a na odkaz ve zprávě rovnou klikne." },
+        { "time": 91, "type": "narrate", "focus": "a", "trigger": { "type": "install" }, "caption": "Tichý poplach identifikuje podezřelý signál (instalace aplikace mimo Google Play během neověřeného hovoru) a zobrazí varování (1. stupeň ochrany)." },
+        { "time": 92, "type": "continue", "focus": "a", "caption": "Uživatelka podvodníkovi věří, stiskne tlačítko Pokračovat a hovor pokračuje dál." },
+        { "time": 600, "type": "call-end", "caption": "Hovor končí." },
+        { "time": 660, "type": "show-record", "caption": "Na telefonu A je možné zobrazit Záznam z Tichého poplachu - co se stalo a proč. Šlo jen o jeden silný signál, takže SMS poplach blízké osobě tentokrát neodešel." }
+      ]
+    },
+    {
+      "id": "fraud-03",
+      "title": "Podvržené číslo \"Moje banka\" v kontaktech",
+      "category": "fraud",
+      "source": "zdroje.md #5",
+      "contacts": [
+        { "number": "+420800100100", "name": "Moje banka", "savedAt": -999999 }
+      ],
+      "steps": [
+        { "time": 0, "type": "call", "direction": "incoming", "number": "+420800100100", "label": "Moje banka", "caption": "Volá číslo uložené jako \"Moje banka\" - podvodník si ho podvrhl (spoofing)." },
+        { "time": 650, "type": "open-app", "app": "testovaci-banka", "caption": "Otevře bankovní aplikaci, aby si \"ověřila\" totožnost volajícího." },
+        { "time": 700, "type": "call-end", "caption": "Hovor končí." }
+      ]
+    },
+    {
+      "id": "fraud-04",
+      "title": "Nejdřív \"bankéř\", pak \"policista\"",
+      "category": "fraud",
+      "inPlayer": true,
+      "source": "zdroje.md #2",
+      "forceDemoMode": false,
+      "manualContinue": true,
+      "contacts": [],
+      "steps": [
+        { "time": 0, "type": "call", "direction": "incoming", "number": "+420733100041", "label": "Neznámé číslo (\"bankéř\")", "caption": "Na telefonu A se objevuje příchozí hovor z neznámého čísla. Uživatelka hovor přijme - volající se představí jako bankéř a vysvětluje, že má napadený účet." },
+        { "time": 720, "type": "call-end", "caption": "Bankéř hovor ukončí a slíbí, že Uživatelce zavolá kolega z policie." },
+        { "time": 780, "type": "call", "direction": "incoming", "number": "+420733100042", "label": "Neznámé číslo (\"policista\")", "caption": "Na telefonu A se o minutu později objevuje další příchozí hovor, tentokrát od \"policisty\", který navazuje na předchozí hovor. Uživatelka hovor přijme." },
+        { "time": 1400, "type": "open-app", "app": "testovaci-banka", "deferTrigger": true, "caption": "\"Policista\" instruuje Uživatelku, ať otevře Mobilní banku a zkontroluje, kam z účtu mizí peníze - ve skutečnosti ji tak navádí, aby sama potvrdila podvodný převod na \"bezpečný\" účet." },
+        { "time": 1401, "type": "narrate", "focus": "a", "trigger": { "type": "open-app", "app": "testovaci-banka" }, "caption": "Tichý poplach identifikuje podezřelý signál (otevřené mobilní bankovnictví a dva navazující delší hovory z různých čísel - zvýšené riziko) a zobrazí varování (1. stupeň ochrany)." },
+        { "time": 1402, "type": "continue", "focus": "a", "caption": "Uživatelka policistovi dál věří, stiskne tlačítko Pokračovat - a protože jde o dlouhý navazující hovor, Tichý poplach posílá upozornění blízké osobě hned." },
+        { "time": 1420, "type": "show-message-b", "focus": "b", "caption": "Na telefon B (např. dcery) přijde zpráva z Tichého poplachu s informací, že blízká osoba pravděpodobně mluví s podvodníkem." },
+        { "time": 1450, "type": "call-end", "caption": "Hovor končí." },
+        { "time": 1500, "type": "show-record", "caption": "Na telefonu A je možné zobrazit Záznam z Tichého poplachu - co se stalo a proč." }
+      ]
+    },
+    {
+      "id": "fraud-05",
+      "title": "Hodinový hovor kvůli \"bezpečnému\" úvěru",
+      "category": "fraud",
+      "source": "zdroje.md #7",
+      "contacts": [],
+      "steps": [
+        { "time": 0, "type": "call", "direction": "incoming", "number": "+420733100005", "label": "Neznámé číslo", "caption": "Volá neznámé číslo, přesvědčuje ji, ať si vezme úvěr, než to \"stihnou podvodníci\"." },
+        { "time": 3700, "type": "open-app", "app": "testovaci-banka", "caption": "Po víc než hodině na lince otevře bankovní aplikaci, aby úvěr potvrdila." },
+        { "time": 3750, "type": "call-end", "caption": "Hovor končí." }
+      ]
+    },
+    {
+      "id": "fraud-06",
+      "title": "SMS od banky zneužitá během hovoru",
+      "category": "fraud",
+      "source": "zdroje.md #4",
+      "contacts": [],
+      "steps": [
+        { "time": 0, "type": "call", "direction": "incoming", "number": "+420733100006", "label": "Neznámé číslo", "caption": "Volá neznámé číslo, žádá nadiktovat kód z SMS od banky." },
+        { "time": 650, "type": "bank-sms", "sender": "TestBanka", "caption": "Přijde ověřovací SMS od banky." },
+        { "time": 700, "type": "call-end", "caption": "Hovor končí." }
+      ]
+    },
+    {
+      "id": "fraud-07",
+      "title": "Instalace aplikace krátce po skončení hovoru",
+      "category": "fraud",
+      "source": "zdroje.md #4",
+      "contacts": [],
+      "steps": [
+        { "time": 0, "type": "call", "direction": "incoming", "number": "+420733100007", "label": "Neznámé číslo", "caption": "Krátký hovor, podvodník pošle odkaz na aplikaci až na konci." },
+        { "time": 300, "type": "call-end", "caption": "Hovor končí po 5 minutách." },
+        { "time": 1200, "type": "install", "caption": "15 minut po hovoru si z odkazu nainstaluje aplikaci pro vzdálený přístup." }
+      ]
+    },
+    {
+      "id": "fraud-08",
+      "title": "Odchozí hovor na číslo, které \"je\" banka",
+      "category": "fraud",
+      "source": "zdroje.md #3",
+      "contacts": [],
+      "steps": [
+        { "time": 0, "type": "call", "direction": "outgoing", "number": "+420733100008", "label": "\"Přímá linka banky\" (podvodné číslo)", "caption": "Pro jistotu volá zpátky na číslo, které jí podvodník dal jako \"přímou linku\" - není to ale skutečné číslo banky." },
+        { "time": 650, "type": "open-app", "app": "testovaci-banka", "caption": "Otevře bankovní aplikaci, aby ověřila zůstatek." },
+        { "time": 700, "type": "call-end", "caption": "Hovor končí." }
+      ]
+    },
+
+    {
+      "id": "benign-01",
+      "title": "Kurýr volá, krátká kontrola platby",
+      "category": "benign",
+      "contacts": [],
+      "steps": [
+        { "time": 0, "type": "call", "direction": "incoming", "number": "+420733200001", "label": "Neznámé číslo (kurýr)", "caption": "Volá kurýr, že neví, kam přesně doručit balík." },
+        { "time": 180, "type": "call-end", "caption": "Hovor končí po 3 minutách." },
+        { "time": 200, "type": "open-app", "app": "testovaci-banka", "caption": "Po hovoru nahlédne do bankovnictví, jestli platba za zboží prošla." }
+      ]
+    },
+    {
+      "id": "benign-02",
+      "title": "Dlouhý hovor s tátou",
+      "category": "benign",
+      "contacts": [
+        { "number": "+420601900002", "name": "Táta", "savedAt": -5000000 }
+      ],
+      "steps": [
+        { "time": 0, "type": "call", "direction": "incoming", "number": "+420601900002", "label": "Táta", "caption": "Volá táta, povídají si o víkendu." },
+        { "time": 2700, "type": "open-app", "app": "testovaci-banka", "caption": "Mezi řečí nahlédne do bankovnictví, kolik má na účtu." },
+        { "time": 5400, "type": "call-end", "caption": "Hovor končí po 90 minutách." }
+      ]
+    },
+    {
+      "id": "benign-03",
+      "title": "Skutečná banka volá a žádá ověření v aplikaci",
+      "category": "benign",
+      "contacts": [
+        { "number": "+420800100100", "name": "Moje banka", "savedAt": -999999 }
+      ],
+      "limitationNote": "Číslo je na seznamu institucí, takže hovor je vždy vyhodnocen jako neověřený, i když jde o skutečnou banku. Očekávaný planý poplach - viz docs/vyhodnoceni.md.",
+      "steps": [
+        { "time": 0, "type": "call", "direction": "incoming", "number": "+420800100100", "label": "Moje banka", "caption": "Volá skutečná banka kvůli podezřelé transakci na kartě." },
+        { "time": 650, "type": "open-app", "app": "testovaci-banka", "caption": "Bankéř ji požádá, ať se pro ověření přihlásí do aplikace - je to opravdu jejich postup." },
+        { "time": 700, "type": "call-end", "caption": "Hovor končí." }
+      ]
+    },
+    {
+      "id": "benign-04",
+      "title": "Nový kamarád volá, nahlédnutí do bankovnictví",
+      "category": "benign",
+      "contacts": [
+        { "number": "+420601900004", "name": "Petr (nový kamarád)", "savedAt": -7200 }
+      ],
+      "limitationNote": "Kontakt uložený před 2 hodinami je podle 5.3 vždy neověřený (pravidlo 24 h). Očekávaný planý poplach - viz docs/vyhodnoceni.md.",
+      "steps": [
+        { "time": 0, "type": "call", "direction": "incoming", "number": "+420601900004", "label": "Petr (nový kamarád)", "caption": "Volá nedávno poznaný kamarád, dlouze si povídají." },
+        { "time": 650, "type": "open-app", "app": "testovaci-banka", "caption": "Mezi řečí nahlédne do bankovnictví." },
+        { "time": 4200, "type": "call-end", "caption": "Hovor končí po 70 minutách." }
+      ]
+    },
+    {
+      "id": "benign-05",
+      "title": "Průzkum trhu z neznámého čísla",
+      "category": "benign",
+      "contacts": [],
+      "steps": [
+        { "time": 0, "type": "call", "direction": "incoming", "number": "+420733200005", "label": "Neznámé číslo", "caption": "Volá anketářka s krátkým průzkumem." },
+        { "time": 900, "type": "call-end", "caption": "Hovor končí po 15 minutách, bez použití bankovnictví." }
+      ]
+    },
+    {
+      "id": "benign-06",
+      "title": "Běžná kontrola zůstatku bez hovoru",
+      "category": "benign",
+      "contacts": [],
+      "steps": [
+        { "time": 0, "type": "open-app", "app": "testovaci-banka", "caption": "Ráno jako obvykle zkontroluje zůstatek, žádný hovor neprobíhá." }
+      ]
+    },
+    {
+      "id": "benign-07",
+      "title": "Rutinní notifikace banky bez hovoru",
+      "category": "benign",
+      "contacts": [],
+      "steps": [
+        { "time": 0, "type": "bank-notification", "sender": "Mobilní banka", "caption": "Přihlásila se do internetového bankovnictví na počítači, aplikace pošle potvrzovací notifikaci." }
+      ]
+    },
+    {
+      "id": "benign-08",
+      "title": "Ověřovací SMS bez hovoru",
+      "category": "benign",
+      "contacts": [],
+      "steps": [
+        { "time": 0, "type": "bank-sms", "sender": "TestBanka", "caption": "Platí kartou v obchodě, banka pošle potvrzovací SMS." }
+      ]
+    },
+    {
+      "id": "benign-09",
+      "title": "Instalace hry bez hovoru",
+      "category": "benign",
+      "contacts": [],
+      "steps": [
+        { "time": 0, "type": "install", "caption": "Stáhne si hru z webu výrobce mimo Google Play, žádný hovor neprobíhá." }
+      ]
+    },
+    {
+      "id": "benign-10",
+      "title": "Volá sama bance na oficiální číslo",
+      "category": "benign",
+      "contacts": [],
+      "steps": [
+        { "time": 0, "type": "call", "direction": "outgoing", "number": "+420800100100", "label": "Banka (oficiální linka)", "caption": "Sama volá na oficiální linku banky kvůli dotazu ke kartě." },
+        { "time": 650, "type": "open-app", "app": "testovaci-banka", "caption": "Operátorka ji požádá o ověření v aplikaci." },
+        { "time": 700, "type": "call-end", "caption": "Hovor končí." }
+      ]
+    },
+    {
+      "id": "benign-11",
+      "title": "Instalace během ověřeného hovoru s tátou",
+      "category": "benign",
+      "contacts": [
+        { "number": "+420601900002", "name": "Táta", "savedAt": -5000000 }
+      ],
+      "steps": [
+        { "time": 0, "type": "call", "direction": "incoming", "number": "+420601900002", "label": "Táta", "caption": "Volá táta." },
+        { "time": 100, "type": "install", "caption": "Mezitím si nainstaluje PDF čtečku, kterou jí táta poslal odkazem." },
+        { "time": 600, "type": "call-end", "caption": "Hovor končí." }
+      ]
+    },
+    {
+      "id": "benign-12",
+      "title": "Hraniční případ: hovor přesně 10 minut",
+      "category": "benign",
+      "contacts": [],
+      "limitationNote": "Hraniční test pravidla \"déle než 10 minut\" - při přesně 10 minutách k varování nedochází (musí být ostře víc).",
+      "steps": [
+        { "time": 0, "type": "call", "direction": "incoming", "number": "+420733200012", "label": "Neznámé číslo", "caption": "Volá neznámé číslo." },
+        { "time": 600, "type": "open-app", "app": "testovaci-banka", "caption": "Přesně po 10 minutách nahlédne do bankovnictví." },
+        { "time": 650, "type": "call-end", "caption": "Hovor končí." }
+      ]
+    },
+    {
+      "id": "benign-13",
+      "title": "Dva nesouvisející krátké hovory s velkým odstupem",
+      "category": "benign",
+      "contacts": [],
+      "steps": [
+        { "time": 0, "type": "call", "direction": "incoming", "number": "+420733200013", "label": "Neznámé číslo", "caption": "Krátký hovor s neznámým číslem." },
+        { "time": 300, "type": "call-end", "caption": "Hovor končí po 5 minutách." },
+        { "time": 8000, "type": "call", "direction": "incoming", "number": "+420733200014", "label": "Neznámé číslo", "caption": "O víc než 2 hodiny později volá jiné neznámé číslo." },
+        { "time": 8300, "type": "call-end", "caption": "Hovor končí po 5 minutách." },
+        { "time": 8350, "type": "open-app", "app": "testovaci-banka", "caption": "Nahlédne do bankovnictví." }
+      ]
+    },
+    {
+      "id": "benign-14",
+      "title": "Kurýr volá dvakrát za sebou, špatně našel adresu",
+      "category": "benign",
+      "contacts": [],
+      "steps": [
+        { "time": 0, "type": "call", "direction": "incoming", "number": "+420733200015", "label": "Neznámé číslo (kurýr)", "caption": "Volá kurýr, že nemůže najít dům." },
+        { "time": 180, "type": "call-end", "caption": "Hovor končí." },
+        { "time": 200, "type": "call", "direction": "incoming", "number": "+420733200016", "label": "Neznámé číslo (kurýr, jiné číslo)", "caption": "O 20 vteřin volá znovu, tentokrát z jiného telefonu kolegy." },
+        { "time": 380, "type": "call-end", "caption": "Hovor končí." },
+        { "time": 400, "type": "open-app", "app": "testovaci-banka", "caption": "Nahlédne do bankovnictví, jestli platba za dobírku prošla." }
+      ]
+    },
+    {
+      "id": "benign-15",
+      "title": "Hovor se sestrou o rodinné oslavě",
+      "category": "benign",
+      "contacts": [
+        { "number": "+420601900015", "name": "Sestra", "savedAt": -3000000 }
+      ],
+      "steps": [
+        { "time": 0, "type": "call", "direction": "incoming", "number": "+420601900015", "label": "Sestra", "caption": "Volá sestra, domlouvají oslavu." },
+        { "time": 1200, "type": "call-end", "caption": "Hovor končí po 20 minutách, bez použití bankovnictví." }
+      ]
+    },
+    {
+      "id": "benign-16",
+      "title": "SMS od e-shopu během hovoru s neznámým číslem",
+      "category": "benign",
+      "contacts": [],
+      "steps": [
+        { "time": 0, "type": "call", "direction": "incoming", "number": "+420733200017", "label": "Neznámé číslo", "caption": "Volá neznámé číslo, běžný rozhovor." },
+        { "time": 350, "type": "bank-sms", "sender": "Zasilkovna", "caption": "Přijde SMS od zásilkovny o vyzvednutí balíku." },
+        { "time": 700, "type": "call-end", "caption": "Hovor končí." }
+      ]
+    },
+    {
+      "id": "benign-17",
+      "title": "Notifikace z jiné aplikace během hovoru",
+      "category": "benign",
+      "contacts": [],
+      "steps": [
+        { "time": 0, "type": "call", "direction": "incoming", "number": "+420733200018", "label": "Neznámé číslo", "caption": "Volá neznámé číslo, běžný rozhovor." },
+        { "time": 350, "type": "bank-notification", "sender": "Super Hra", "caption": "Přijde notifikace z mobilní hry." },
+        { "time": 700, "type": "call-end", "caption": "Hovor končí." }
+      ]
+    },
+    {
+      "id": "demo",
+      "title": "\"Bankéř\": kontrola v aplikaci, pak instalace aplikace",
+      "category": "demo",
+      "inPlayer": true,
+      "forceDemoMode": false,
+      "manualContinue": true,
+      "contacts": [],
+      "steps": [
+        { "time": 0, "type": "call", "direction": "incoming", "number": "+420733900000", "label": "Neznámé číslo", "caption": "Na telefonu A se objevuje příchozí hovor z neznámého čísla. Uživatelka hovor přijme." },
+        { "time": 660, "type": "open-app", "app": "testovaci-banka", "deferTrigger": true, "caption": "Falešný bankéř chce po uživatelce otevřít Mobilní banku, např. pro odeslání peněz na \"bezpečný\" účet, nebo kontrolu údajů za účelem sdělení citlivých informací." },
+        { "time": 661, "type": "narrate", "focus": "a", "trigger": { "type": "open-app", "app": "testovaci-banka" }, "caption": "Tichý poplach identifikuje podezřelý signál (příchozí hovor z neznámého čísla trvající déle než 10 minut a otevřené mobilní bankovnictví) a zobrazí varování (1. stupeň ochrany)." },
+        { "time": 662, "type": "continue", "focus": "a", "caption": "Uživatelka útočníkovi i přes varování věří, stiskne tlačítko Pokračovat a pokračuje v hovoru." },
+        { "time": 720, "type": "bank-sms", "sender": "Neznámé číslo", "body": "Pro ochranu účtu si stáhněte zabezpečovací aplikaci: banka-zabezpeceni.cz/instalovat", "caption": "O chvíli později uživatelce přijde SMS s odkazem na \"zabezpečovací\" aplikaci." },
+        { "time": 780, "type": "install", "deferTrigger": true, "caption": "Uživatelka otevře Zprávy a klikne na odkaz ve zprávě." },
+        { "time": 781, "type": "narrate", "focus": "a", "trigger": { "type": "install" }, "caption": "Tichý poplach identifikuje další podezřelý signál (příchozí hovor z neznámého čísla, dříve otevřené mobilní bankovnictví a nyní snaha o instalaci aplikace z odkazu) a posílá upozornění blízké osobě (2. stupeň ochrany)." },
+        { "time": 782, "type": "continue", "focus": "a", "caption": "I kdyby uživatelka stále útočníkovi věřila, Tichý poplach už odeslal upozornění blízké osobě, která může zasáhnout." },
+        { "time": 800, "type": "show-message-b", "focus": "b", "caption": "Na telefon B (např. dcery) přijde zpráva z Tichého poplachu s informací, že blízká osoba pravděpodobně mluví s podvodníkem." },
+        { "time": 840, "type": "call-end", "caption": "Hovor končí." },
+        { "time": 900, "type": "show-record", "caption": "Na telefonu A je možné zobrazit Záznam z Tichého poplachu - co se stalo a proč." }
+      ]
+    },
+    {
+      "id": "benign-18",
+      "title": "Krátký odchozí hovor na kadeřnictví",
+      "category": "benign",
+      "contacts": [],
+      "steps": [
+        { "time": 0, "type": "call", "direction": "outgoing", "number": "+420733200019", "label": "Kadeřnictví", "caption": "Volá si objednat termín ke kadeřnici." },
+        { "time": 120, "type": "call-end", "caption": "Hovor končí po 2 minutách." }
+      ]
+    }
+  ]
+}

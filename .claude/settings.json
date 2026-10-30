@@ -1,0 +1,68 @@
+{
+  "permissions": {
+    "defaultMode": "default",
+    "disableBypassPermissionsMode": "disable",
+    "deny": [
+      "Read(~/CodingBear/.obsidian/**)",
+      "Edit(~/CodingBear/.obsidian/**)",
+      "Read(~/CodingBear/skills/**)",
+      "Edit(~/CodingBear/skills/**)",
+      "Read(~/CodingBear/skills-draft/**)",
+      "Edit(~/CodingBear/skills-draft/**)",
+      "Read(~/CodingBear/company-skills/**)",
+      "Edit(~/CodingBear/company-skills/**)",
+      "Read(~/CodingBear/Analytic/.obsidian/**)",
+      "Edit(~/CodingBear/Analytic/.obsidian/**)",
+      "Read(~/CodingBear/Analytic/00-inbox/**)",
+      "Edit(~/CodingBear/Analytic/00-inbox/**)",
+      "Read(~/CodingBear/Analytic/01-presales/**)",
+      "Edit(~/CodingBear/Analytic/01-presales/**)",
+      "Read(~/CodingBear/Analytic/02-projects/**)",
+      "Edit(~/CodingBear/Analytic/02-projects/**)",
+      "Read(~/Documents/**)",
+      "Edit(~/Documents/**)",
+      "Read(~/Desktop/**)",
+      "Edit(~/Desktop/**)",
+      "Read(~/Downloads/**)",
+      "Edit(~/Downloads/**)",
+      "Read(~/Library/CloudStorage/**)",
+      "Edit(~/Library/CloudStorage/**)",
+      "Read(~/Library/Mobile Documents/**)",
+      "Edit(~/Library/Mobile Documents/**)",
+      "Read(~/.ssh/**)",
+      "Read(~/.aws/**)",
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Edit(./.claude/**)"
+    ],
+    "ask": [
+      "Bash(git push:*)",
+      "Bash(gh repo create:*)",
+      "Bash(gh repo edit:*)",
+      "Bash(gh api:*)"
+    ]
+  },
+  "sandbox": {
+    "enabled": true,
+    "failIfUnavailable": true,
+    "autoAllowBashIfSandboxed": true,
+    "allowUnsandboxedCommands": false,
+    "filesystem": {
+      "denyRead": [
+        "~/"
+      ],
+      "allowRead": [
+        ".",
+        "~/.config/gh",
+        "~/.gitconfig"
+      ]
+    },
+    "network": {
+      "allowedDomains": [
+        "github.com",
+        "api.github.com"
+      ],
+      "allowLocalBinding": true
+    }
+  }
+}
