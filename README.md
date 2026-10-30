@@ -5,13 +5,11 @@ Tichý poplach je návrh aplikace pro Android, která chrání před telefonním
 **Živý simulátor:** https://marcelamachova.github.io/tichy-poplach/
 **Video (3 min):** https://youtu.be/6ca4lkQcjno
 
-
 ## Pro koho a proč
 
 Pomáhá primárně ženám kolem 45 let a jejich blízkým. Podle Policie ČR jsou oběťmi podvodů typu falešný bankéř/policista zhruba v 80 % ženy a průměrný věk oběti je 45 let – naletět ale může každý (zdroj: [Policie ČR – Prevence kybernetických podvodů, 15. 5. 2026](https://archiv.policie.gov.cz/clanek/prevence-kybernetickych-podvodu.aspx)).
 
 Oběť je v hovoru sama, pod tlakem a podvodu věří. Peníze posílá sama: nainstaluje aplikaci, otevře bankovnictví, potvrdí v něm platbu nebo úvěr. Rady typu „zavěste“ v tu chvíli často selžou – oběť volajícímu věří a podvodníci ji na varování předem připraví. Tichý poplach proto nepočítá s tím, že oběť pojme podezření.
-
 
 ## Jakou obavu řeší 
 
@@ -23,7 +21,6 @@ Tichý poplach obavu z podvodů a jejich rozpoznání snižuje tím, že na to �
 2. Když oběť i tak pokračuje, pošle SMS blízkému, který může zasáhnout.
 3. Funguje, i když oběť nic netuší a podvodníkovi věří.
 
-
 ## Co to je
 
 **Toto je webový simulátor**, ne skutečná Android aplikace. Ukazuje chování cílové aplikace na dvou simulovaných telefonech vedle sebe. **Rozhodovací logika je skutečná a otestovaná** (`js/logic.js`, 18 automatických testů, laboratorní test na 26 scénářích) — simulované jsou jen telefon a jeho systémové události (hovory, notifikace, SMS, instalace).
@@ -31,7 +28,6 @@ Tichý poplach obavu z podvodů a jejich rozpoznání snižuje tím, že na to �
 Cílový produkt je aplikace pro Android, která **neposlouchá obsah hovorů**.
 
 Hlídá, co člověk dělá s telefonem během hovoru s neověřeným číslem, a v kritickém momentu zasáhne: varováním na displeji a SMS poplachem předem zvolenému blízkému.
-
 
 ## Jak to funguje
 
@@ -53,7 +49,6 @@ Hlídá, co člověk dělá s telefonem během hovoru s neověřeným číslem, 
 Podrobná pravidla jsou implementovaná v `js/logic.js`, data (seznamy a lhůty)
 v `data/rules.json`.
 
-
 ## Lhůty jsou výchozí odhady
 
 10 minut u bankovní aplikace/notifikace/SMS, 60 minut a 45 minut u dlouhého
@@ -61,7 +56,6 @@ hovoru, 4 hodiny u okna po hovoru — tyhle hodnoty **nevycházejí z dat**,
 protože veřejná statistika o přesném načasování těchto podvodů neexistuje.
 Jsou to rozumné výchozí odhady, které se zkalibrují v pilotu. V `rules.json`
 jde vždy o jedno číslo.
-
 
 ## Jak projekt využívá AI
 
@@ -73,13 +67,11 @@ V další fázi bychom pravidla doplnili AI modelem. Pilot by nám mohl dát ano
 
 Jak projekt vznikl: Claude (model Claude Opus 5.5) pomohl s orientací ve výzvě a s ním vznikla pravidla, zadání a testovací scénáře. Podle tohoto zadání pak Claude Code napsal simulátor, logiku a testy a během testování je upravoval. O tom, co se staví a co platí, rozhodoval člověk.
 
-
 ## Chyby, nejistoty a data
 
 - **Plané poplachy:** přicházejí a víme kdy – když skutečná banka volá ze svého čísla, aplikace ji od podvodníka s podvrženým číslem nerozliší. Proto varování nikoho neobviňuje a blízkému odejde nejvýš jedna SMS na situaci.
 - **Nejistoty:** lhůty jsou odhady (viz níže), chování Android rozhraní zatím není ověřené na zařízení. Ověřeno jen v simulátoru.
 - **Data:** aplikace neposlouchá ani nenahrává hovory, u notifikací a SMS čte jen odesílatele, ne text. Vyhodnocení běží v telefonu, nic se neodesílá na server. SMS blízkému neobsahuje číslo volajícího, obsah ani názvy aplikací. Nepoužíváme službu usnadnění přístupu, kterou zneužívají sami podvodníci.
-
 
 ## Vztah k ochraně Androidu od Googlu
 
