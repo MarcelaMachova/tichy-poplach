@@ -1,35 +1,37 @@
 # Tichý poplach
 
-Webový simulátor chování Android aplikace proti telefonním podvodům typu
-„falešný bankéř" a „falešný policista".
+Tichý poplach je návrh aplikace pro Android, která chrání před telefonními podvody typu „falešný bankéř“ a „falešný policista“. Nespoléhá na to, že člověk pozná podvod sám, ale hlídá, co člověk během hovoru s neověřeným číslem dělá s telefonem – otevírá bankovnictví, dostává notifikace od banky, instaluje aplikaci z odkazu. V kritickém okamžiku zobrazí varování, a když oběť pokračuje v hovoru, pošle SMS předem zvolenému kontaktu, aby mohl zasáhnout.
 
-**Živý simulátor:** `[ZDE BUDE ODKAZ NA GITHUB PAGES PO ZVEŘEJNĚNÍ]`
-**Video (1–2 min):** https://youtu.be/6ca4lkQcjno
+**Živý simulátor:** https://marcelamachova.github.io/tichy-poplach/
+**Video (3 min):** https://youtu.be/6ca4lkQcjno
+
 
 ## Pro koho a proč
 
-Cílová skupina jsou ženy kolem 45 let s Androidem a mobilním bankovnictvím —
-podle policie typický profil oběti podvodu „falešný bankéř/policista". Oběť je
-v hovoru sama, pod tlakem, a podvodu věří. Peníze posílá sama: nainstaluje
-aplikaci z odkazu, otevře bankovnictví, potvrdí platbu nebo úvěr.
+Pomáhá primárně ženám kolem 45 let a jejich blízkým. Podle Policie ČR jsou oběťmi podvodů typu falešný bankéř/policista zhruba v 80 % ženy a průměrný věk oběti je 45 let – naletět ale může každý (zdroj: [Policie ČR – Prevence kybernetických podvodů, 15. 5. 2026](https://archiv.policie.gov.cz/clanek/prevence-kybernetickych-podvodu.aspx)).
 
-Podle Českého barometru obav z AI 2026 se podvodů s AI obává **77,5 %** lidí,
-ale jen **26,4 %** si věří, že by věrohodný AI obsah (foto, video, hlas)
-poznali. Barometr neměří chování v hovoru ani zkušenost s podvodem — Tichý
-poplach na tom proto nestaví. Nestaví na tom, že člověk podvod pozná.
+Oběť je v hovoru sama, pod tlakem a podvodu věří. Peníze posílá sama: nainstaluje aplikaci, otevře bankovnictví, potvrdí v něm platbu nebo úvěr. Rady typu „zavěste“ v tu chvíli často selžou – oběť volajícímu věří a podvodníci ji na varování předem připraví. Tichý poplach proto nepočítá s tím, že oběť pojme podezření.
+
+
+## Jakou obavu řeší 
+
+Podle [Českého barometru obav z AI 2026](https://asociace.ai/cesky-barometr-obav-z-ai-2026/) se podvodů s využitím AI obává 77,5 % lidí – nejvíc ze všech sledovaných obav. Barometr neměří, zda lidé poznají podvodníka v telefonu. Nejbližší údaj je, že jen 26,4 % si věří, že by poznali věrohodnou fotografii, video nebo hlasovou nahrávku vytvořenou AI (jde o sebehodnocení, ne test).
+
+Tichý poplach obavu z podvodů a jejich rozpoznání snižuje tím, že na to člověk není sám: aplikace během hovoru hlídá celou řadu rizikových signálů, a když je potřeba, zapojí blízkého.
+
+1. Ve chvíli, kdy oběť během rizikového hovoru otevírá bankovnictví nebo instaluje aplikaci, ji zastaví varováním.
+2. Když oběť i tak pokračuje, pošle SMS blízkému, který může zasáhnout.
+3. Funguje, i když oběť nic netuší a podvodníkovi věří.
+
 
 ## Co to je
 
-**Toto je webový simulátor**, ne skutečná Android aplikace. Ukazuje chování
-cílové aplikace na dvou simulovaných telefonech vedle sebe. **Rozhodovací
-logika je skutečná a otestovaná** (`js/logic.js`, 18 automatických testů,
-laboratorní test na 26 scénářích) — simulované jsou jen telefon a jeho
-systémové události (hovory, notifikace, SMS, instalace).
+**Toto je webový simulátor**, ne skutečná Android aplikace. Ukazuje chování cílové aplikace na dvou simulovaných telefonech vedle sebe. **Rozhodovací logika je skutečná a otestovaná** (`js/logic.js`, 18 automatických testů, laboratorní test na 26 scénářích) — simulované jsou jen telefon a jeho systémové události (hovory, notifikace, SMS, instalace).
 
 Cílový produkt je aplikace pro Android, která **neposlouchá obsah hovorů**.
-Hlídá, co člověk dělá s telefonem během hovoru s neověřeným číslem, a
-v kritickém momentu zasáhne: varováním na displeji a SMS poplachem předem
-zvolenému blízkému.
+
+Hlídá, co člověk dělá s telefonem během hovoru s neověřeným číslem, a v kritickém momentu zasáhne: varováním na displeji a SMS poplachem předem zvolenému blízkému.
+
 
 ## Jak to funguje
 
@@ -51,6 +53,7 @@ zvolenému blízkému.
 Podrobná pravidla jsou implementovaná v `js/logic.js`, data (seznamy a lhůty)
 v `data/rules.json`.
 
+
 ## Lhůty jsou výchozí odhady
 
 10 minut u bankovní aplikace/notifikace/SMS, 60 minut a 45 minut u dlouhého
@@ -58,6 +61,25 @@ hovoru, 4 hodiny u okna po hovoru — tyhle hodnoty **nevycházejí z dat**,
 protože veřejná statistika o přesném načasování těchto podvodů neexistuje.
 Jsou to rozumné výchozí odhady, které se zkalibrují v pilotu. V `rules.json`
 jde vždy o jedno číslo.
+
+
+## Jak projekt využívá AI
+
+AI je v současnosti především na straně útočníka: falešné doklady, klonovaný hlas, příprava na oběť a přesvědčivé scripty. V této fázi projektu jsme se rozhodli s ní nesoutěžit v rozpoznávání obsahu – Tichý poplach hlídá chování telefonu, které AI zfalšovat nemůže.
+
+Místo AI modelu jsme zvolili pevná pravidla, protože zatím nemáme data, na kterých by se model dal naučit. Díky tomu aplikace reaguje pokaždé stejně a u každého poplachu umíme říct proč.
+
+V další fázi bychom pravidla doplnili AI modelem. Pilot by nám mohl dát anonymizovaná data o tom, které poplachy byly skutečné a které plané (se souhlasem uživatelek). Model naučený na nich může kombinovat signály přesněji než pevně nastavené časové hranice a snížit počet planých poplachů; pevná pravidla přitom zůstanou jako pojistka. AI bychom využili i k průběžnému sledování nových policejních varování a zpráv o podvodech: připravovala by z nich nové testovací scénáře a návrhy úprav pravidel, aby aplikace držela krok s tím, jak útočníci mění taktiku. Každou úpravu by před nasazením schválil člověk.
+
+Jak projekt vznikl: Claude (model Claude Opus 5.5) pomohl s orientací ve výzvě a s ním vznikla pravidla, zadání a testovací scénáře. Podle tohoto zadání pak Claude Code napsal simulátor, logiku a testy a během testování je upravoval. O tom, co se staví a co platí, rozhodoval člověk.
+
+
+## Chyby, nejistoty a data
+
+- **Plané poplachy:** přicházejí a víme kdy – když skutečná banka volá ze svého čísla, aplikace ji od podvodníka s podvrženým číslem nerozliší. Proto varování nikoho neobviňuje a blízkému odejde nejvýš jedna SMS na situaci.
+- **Nejistoty:** lhůty jsou odhady (viz níže), chování Android rozhraní zatím není ověřené na zařízení. Ověřeno jen v simulátoru.
+- **Data:** aplikace neposlouchá ani nenahrává hovory, u notifikací a SMS čte jen odesílatele, ne text. Vyhodnocení běží v telefonu, nic se neodesílá na server. SMS blízkému neobsahuje číslo volajícího, obsah ani názvy aplikací. Nepoužíváme službu usnadnění přístupu, kterou zneužívají sami podvodníci.
+
 
 ## Vztah k ochraně Androidu od Googlu
 
@@ -77,9 +99,7 @@ podvodných zpráv přes Gemini **v Česku zatím nefungují** — Gemini detekc
 běží jen ve 48 zemích a devíti jazycích, čeština mezi nimi není, a žádná
 česká banka zatím není mezi partnery (jen americké a brazilské banky a
 Revolut). (Zdroje: [Google Security Blog – Android expands pilot for in-call
-scam protection](https://blog.google/security/android-expands-pilot-in-call-scam-protection-financial-apps/),
-[Android Central](https://www.androidcentral.com/apps-software/android-os/google-expands-in-call-spam-protection-to-the-us),
-[GeekLife.cz – Google ohlásil pro Android nové ochrany proti podvodníkům](https://www.geeklife.cz/android-ochrana-podvody-sdileni-obrazovky/).)
+scam protection](https://blog.google/security/android-expands-pilot-in-call-scam-protection-financial-apps/), [Android Central](https://www.androidcentral.com/apps-software/android-os/google-expands-in-call-spam-protection-to-the-us), [GeekLife.cz – Google ohlásil pro Android nové ochrany proti podvodníkům](https://www.geeklife.cz/android-ochrana-podvody-sdileni-obrazovky/).)
 
 Tichý poplach vznikl nezávisle na této funkci a staví na stejném principu
 (sledovat chování telefonu během rizikového hovoru, ne obsah hovoru). Liší se
@@ -160,8 +180,9 @@ spolupráce s policií (hlídka na místo u bitcoinmatu nebo kurýra) a s bankam
 
 ## Jak vyzkoušet
 
-1. Otevřít živý simulátor (odkaz nahoře) nebo lokálně: `python3 -m http.server`
-   v kořeni repozitáře a otevřít `index.html` v Chrome nebo Safari.
+1. Otevřít [živý simulátor](https://marcelamachova.github.io/tichy-poplach/)
+   nebo lokálně: `python3 -m http.server` v kořeni repozitáře a otevřít
+   `index.html` v Chrome nebo Safari.
 2. V panelu je zapnutý demo režim (zkrácené lhůty).
 3. Ručně: vyvolat příchozí hovor z neznámého čísla, přijmout, po ~12 s
    otevřít Mobilní banku, Pokračovat, banku otevřít znovu → SMS na telefon
